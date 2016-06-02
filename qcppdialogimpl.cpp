@@ -960,13 +960,17 @@ void QCPPDialogImpl::connectTTY()
       m_notifier=new QSocketNotifier(m_fd, QSocketNotifier::Read, this);
       connect(m_notifier, SIGNAL(activated(int)), this, SLOT(readData(int)));
    }
-   m_oldCmdsLb->setEnabled(true);
-   m_cmdLe->setEnabled(true);
-   m_sendPb->setEnabled(true);
-   m_protoPb->setEnabled(true);
-   m_closePb->setEnabled(true);
 
-   m_cmdLe->setFocus();
+   /* only enable inputs when opened for writing */
+   if (flags != O_RDONLY)   {
+      m_oldCmdsLb->setEnabled(true);
+      m_cmdLe->setEnabled(true);
+      m_sendPb->setEnabled(true);
+      m_protoPb->setEnabled(true);
+      m_cmdLe->setFocus();
+   }
+
+   m_closePb->setEnabled(true);
 
    m_previousChar = '\0';
    m_hexBytes=0;
